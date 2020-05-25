@@ -1,0 +1,19 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="900" height="600">
+<rect x="1" y="1" width="900" height="301" fill="azure" stroke="azure" stroke-width="1" />
+<rect x="1" y="301" width="900" height="301" fill="khaki" stroke="khaki" stroke-width="1" />
+<polygon points="403,253 497,253 497,347 403,347" fill="lavender" stroke="lavender" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="497,253 521,253 521,347 497,347" fill="lavender" stroke="lavender" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="521,229 557,193 557,407 521,371" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="557,193 610,140 610,460 557,407" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="610,140 690,60 690,540 610,460" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="690,60 750,0
+900,1 900,600 750,600 690,540" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="379,229 403,253 403,347 379,371" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="343,229 379,229 379,371 343,371" fill="lavender" stroke="lavender" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="290,140 343,193 343,407 290,460" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="210,60 290,140 290,460 210,540" fill="silver" stroke="silver" stroke-width="2" stroke-linejoin="bevel" />
+<polygon points="1,60 210,60 210,540 1,540" fill="lavender" stroke="lavender" stroke-width="2" stroke-linejoin="bevel" />
+<rect x="1" y="1" width="898" height="598" fill="none" stroke="silver" stroke-width="2" />
+
+</svg>
