@@ -56,7 +56,7 @@ class ConfiguracaoAmbiente
                               "curva" => array("B" => 'lavender', "P" => 'lavender'),
                               "inicio" => array("B" => 'green', "P" => 'green'),
                               "fim" => array("B" => 'black', "P" => 'black'),
-                              "fora" => array("B" => 'darkkhaki', "P" => 'darkkhaki'),
+                              "fora" => array("B" => 'rgb(224,226,196)', "P" => 'rgb(224,226,196)'),
                               "quadro" => array("B" => 'silver', "P" => 'none')));
     }
     
