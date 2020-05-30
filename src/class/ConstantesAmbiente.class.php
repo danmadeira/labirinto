@@ -13,7 +13,7 @@ class ConfiguracaoAmbiente
     {
         $w = 1350;
         $h = 560;
-        $percentuais = array(100, 80, 53.3, 35.6, 23.7, 15.8, 10.5, 7.0, 4.7, 3.1, 2.1, 1.4, 0.9);
+        $percentuais = ConfiguracaoAmbiente::gerarEscalaPerspectiva(1.45, 13);
 
         $maze = array(array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
                       array(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1),
@@ -58,6 +58,15 @@ class ConfiguracaoAmbiente
                               "fim" => array("B" => 'black', "P" => 'black'),
                               "fora" => array("B" => 'rgb(224,226,196)', "P" => 'rgb(224,226,196)'),
                               "quadro" => array("B" => 'silver', "P" => 'none')));
+    }
+    
+    private static function gerarEscalaPerspectiva($fator, $limite)
+    {
+        $percentuais = array(0 => 100);
+        for ($i = 1; $i < $limite; $i++) {
+            $percentuais[$i] = $percentuais[$i-1] / $fator;
+        }
+        return $percentuais;
     }
     
 }
