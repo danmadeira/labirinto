@@ -34,7 +34,7 @@ class ParedesLabirinto
      */
     public function quadro()
     {
-        return $this->svg->retangulo(1, 1, (LARGURA_SVG-2), (ALTURA_SVG-2), '', '', CORES["quadro"]["P"], CORES["quadro"]["B"], 2);
+        return $this->svg->retangulo(1, 1, (LARGURA_SVG-2), (ALTURA_SVG-2), '', '', array("fill" => CORES["quadro"]["P"], "stroke" => CORES["quadro"]["B"], "stroke-width" => 2));
     }
     
     /**
@@ -46,7 +46,7 @@ class ParedesLabirinto
     {
         $h = ALTURA_SVG / 2 + 1;
         
-        return $this->svg->retangulo(1, 1, LARGURA_SVG, $h, '', '', CORES["teto"]["P"], CORES["teto"]["B"], 1);
+        return $this->svg->retangulo(1, 1, LARGURA_SVG, $h, '', '', array("fill" => CORES["teto"]["P"], "stroke" => CORES["teto"]["B"], "stroke-width" => 1));
     }
     
     /**
@@ -59,7 +59,7 @@ class ParedesLabirinto
         $y = ALTURA_SVG / 2 + 1;
         $h = ALTURA_SVG / 2 + 1;
         
-        return $this->svg->retangulo(1, $y, LARGURA_SVG, $h, '', '', CORES["chao"]["P"], CORES["chao"]["B"], 1);
+        return $this->svg->retangulo(1, $y, LARGURA_SVG, $h, '', '', array("fill" => CORES["chao"]["P"], "stroke" => CORES["chao"]["B"], "stroke-width" => 1));
     }
     
     /**
@@ -217,7 +217,7 @@ class ParedesLabirinto
                   $quadrado["c"]["x"] . ',' . $quadrado["c"]["y"] . ' ' .
                   $quadrado["d"]["x"] . ',' . $quadrado["d"]["y"];
         
-        return $this->svg->poligono($pontos, $preenchimento, $borda, 2, '', 'bevel');
+        return $this->svg->poligono($pontos, array("fill" => $preenchimento, "stroke" => $borda, "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -243,7 +243,7 @@ class ParedesLabirinto
                   $trapezio["c"]["x"] . ',' . $trapezio["c"]["y"] . ' ' .
                   $trapezio["d"]["x"] . ',' . $trapezio["d"]["y"];
         
-        return $this->svg->poligono($pontos, CORES["parede"]["P"], CORES["parede"]["B"], 2, '', 'bevel');
+        return $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -263,7 +263,7 @@ class ParedesLabirinto
                   $retangulo["c"]["x"] . ',' . $retangulo["c"]["y"] . ' ' .
                   $retangulo["d"]["x"] . ',' . $retangulo["d"]["y"];
         
-        return $this->svg->poligono($pontos, CORES["curva"]["P"], CORES["curva"]["B"], 2, '', 'bevel');
+        return $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
 
     /**
@@ -289,7 +289,7 @@ class ParedesLabirinto
                   $trapezio["c"]["x"] . ',' . $trapezio["c"]["y"] . ' ' .
                   $trapezio["d"]["x"] . ',' . $trapezio["d"]["y"] . $ef;
         
-        return $this->svg->poligono($pontos, CORES["parede"]["P"], CORES["parede"]["B"], 2, '', 'bevel');
+        return $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -309,7 +309,7 @@ class ParedesLabirinto
                   $retangulo["c"]["x"] . ',' . $retangulo["c"]["y"] . ' ' .
                   $retangulo["d"]["x"] . ',' . $retangulo["d"]["y"];
         
-        return $this->svg->poligono($pontos, CORES["curva"]["P"], CORES["curva"]["B"], 2, '', 'bevel');
+        return $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
 
 }
