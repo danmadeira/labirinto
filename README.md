@@ -6,7 +6,7 @@ Script em PHP para construção de um ambiente em três dimensões de um labirin
 
 O script aceita variáveis externas pelo método GET para definir uma posição e direção dentro do labirinto. Ex.:
 
-http://host/labirinto/index.php?linha=12&coluna=7&direcao=N
+index.php?linha=12&coluna=7&direcao=N
 
 :eyes: Este script utiliza a classe publicada em [Construção de elementos SVG](https://github.com/danmadeira/construcao-elementos-svg)
 
