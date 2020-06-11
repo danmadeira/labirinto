@@ -129,10 +129,10 @@ class GraficoVetorialEscalavel
     // xlink:href = "<iri>"
     public function uso($xlinkhref, $x = '', $y = '', $width = '', $height = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($x)) {
+        if (!empty($x) or is_numeric($x)) {
             $x = ' x="' . $x . '"';
         }
-        if (!empty($y)) {
+        if (!empty($y) or is_numeric($y)) {
             $y = ' y="' . $y . '"';
         }
         if (!empty($width)) {
@@ -313,10 +313,10 @@ class GraficoVetorialEscalavel
     // lengthAdjust = "spacing | spacingAndGlyphs"
     public function texto($x, $y, $content, $dx, $dy, $rotate = '', $textlength = '', $lengthadjust = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($dx)) {
+        if (!empty($dx) or is_numeric($dx)) {
             $dx = ' dx="' . $dx . '"';
         }
-        if (!empty($dy)) {
+        if (!empty($dy) or is_numeric($dy)) {
             $dy = ' dy="' . $dy . '"';
         }
         if (!empty($rotate)) {
@@ -351,16 +351,16 @@ class GraficoVetorialEscalavel
     // lengthAdjust = "spacing|spacingAndGlyphs"
     public function textoAjustado($content, $x = '', $y = '', $dx = '', $dy = '', $rotate = '', $textlength = '', $lengthadjust = '', $presentation = '', $class = '', $style = '')
     {
-        if (!empty($x)) {
+        if (!empty($x) or is_numeric($x)) {
             $x = ' x="' . $x . '"';
         }
-        if (!empty($y)) {
+        if (!empty($y) or is_numeric($y)) {
             $y = ' y="' . $y . '"';
         }
-        if (!empty($dx)) {
+        if (!empty($dx) or is_numeric($dx)) {
             $dx = ' dx="' . $dx . '"';
         }
-        if (!empty($dy)) {
+        if (!empty($dy) or is_numeric($dy)) {
             $dy = ' dy="' . $dy . '"';
         }
         if (!empty($rotate)) {
@@ -412,6 +412,265 @@ class GraficoVetorialEscalavel
         return '<textPath' . $xlinkhref . $startoffset . $method . $spacing . $attributes . $class . $style . '>' . $content . '</textPath>' . PHP_EOL;
     }
     
+    // horiz-origin-x = "<number>"
+    // horiz-origin-y = "<number>"
+    // horiz-adv-x = "<number>"
+    // vert-origin-x = "<number>"
+    // vert-origin-y = "<number>"
+    // vert-adv-y = "<number>"
+    public function fonte($content, $id = '', $horizoriginx = '', $horizoriginy = '', $horizadvx = '', $vertoriginx = '', $vertoriginy = '', $vertadvy = '', $presentation = '', $class = '', $style = '')
+    {
+        if (!empty($id)) {
+            $id = ' id="' . $id . '"';
+        }
+        if (!empty($horizoriginx)) {
+            $horizoriginx = ' horiz-origin-x="' . $horizoriginx . '"';
+        }
+        if (!empty($horizoriginy)) {
+            $horizoriginy = ' horiz-origin-y="' . $horizoriginy . '"';
+        }
+        if (!empty($horizadvx)) {
+            $horizadvx = ' horiz-adv-x="' . $horizadvx . '"';
+        }
+        if (!empty($vertoriginx)) {
+            $vertoriginx = ' vert-origin-x="' . $vertoriginx . '"';
+        }
+        if (!empty($vertoriginy)) {
+            $vertoriginy = ' vert-origin-y="' . $vertoriginy . '"';
+        }
+        if (!empty($vertadvy)) {
+            $vertadvy = ' vert-adv-y="' . $vertadvy . '"';
+        }
+        if (!empty($class)) {
+            $class = ' class="' . $class . '"';
+        }
+        if (!empty($style)) {
+            $style = ' style="' . $style . '"';
+        }
+        $attributes = $this->obterAtributosApresentacao($presentation);
+        
+        return '<font' . $id . $horizoriginx . $horizoriginy . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</font>' . PHP_EOL;
+    }
+    
+    // font-family = "<string>"
+    // font-style = "all | [ normal | italic | oblique] [, [normal | italic | oblique]]*"
+    // font-variant = "[normal | small-caps] [,[normal | small-caps]]*"
+    // font-weight = "all | [normal | bold | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900] [, [normal | bold | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900]]*"
+    // font-stretch = "all | [ normal | ultra-condensed | extra-condensed | condensed | semi-condensed | semi-expanded | expanded | extra-expanded | ultra-expanded] [, [ normal | ultra-condensed | extra-condensed | condensed | semi-condensed | semi-expanded | expanded | extra-expanded | ultra-expanded] ]*"
+    // font-size = "<string>"
+    // unicode-range = "<urange> [, <urange>]*"
+    // units-per-em = "<number>"
+    // panose-1 = "[<integer>]{10}"
+    // stemv = "<number>"
+    // stemh = "<number>"
+    // slope = "<number>"
+    // cap-height = "<number>"
+    // x-height = "<number>"
+    // accent-height = "<number>"
+    // ascent = "<number>"
+    // descent = "<number>"
+    // widths = "<string>"
+    // bbox = "<string>"
+    // ideographic = "<number>"
+    // alphabetic = "<number>"
+    // mathematical = "<number>"
+    // hanging = "<number>"
+    // v-ideographic = "<number>"
+    // v-alphabetic = "<number>"
+    // v-mathematical = "<number>"
+    // v-hanging = "<number>"
+    // underline-position = "<number>"
+    // underline-thickness = "<number>"
+    // strikethrough-position = "<number>"
+    // strikethrough-thickness = "<number>"
+    // overline-position = "<number>"
+    // overline-thickness = "<number>"
+    private function obterAtributosFonteFace($a)
+    {
+        $attributes = '';
+        if (!empty($a) and is_array($a)) {
+            if (array_key_exists("font-family", $a)) {
+                $attributes .= ' font-family="' . $a["font-family"] . '"';
+            }
+            if (array_key_exists("font-style", $a)) {
+                $attributes .= ' font-style="' . $a["font-style"] . '"';
+            }
+            if (array_key_exists("font-variant", $a)) {
+                $attributes .= ' font-variant="' . $a["font-variant"] . '"';
+            }
+            if (array_key_exists("font-weight", $a)) {
+                $attributes .= ' font-weight="' . $a["font-weight"] . '"';
+            }
+            if (array_key_exists("font-stretch", $a)) {
+                $attributes .= ' font-stretch="' . $a["font-stretch"] . '"';
+            }
+            if (array_key_exists("font-size", $a)) {
+                $attributes .= ' font-size="' . $a["font-size"] . '"';
+            }
+            if (array_key_exists("unicode-range", $a)) {
+                $attributes .= ' unicode-range="' . $a["unicode-range"] . '"';
+            }
+            if (array_key_exists("units-per-em", $a)) {
+                $attributes .= ' units-per-em="' . $a["units-per-em"] . '"';
+            }
+            if (array_key_exists("panose-1", $a)) {
+                $attributes .= ' panose-1="' . $a["panose-1"] . '"';
+            }
+            if (array_key_exists("stemv", $a)) {
+                $attributes .= ' stemv="' . $a["stemv"] . '"';
+            }
+            if (array_key_exists("stemh", $a)) {
+                $attributes .= ' stemh="' . $a["stemh"] . '"';
+            }
+            if (array_key_exists("slope", $a)) {
+                $attributes .= ' slope="' . $a["slope"] . '"';
+            }
+            if (array_key_exists("cap-height", $a)) {
+                $attributes .= ' cap-height="' . $a["cap-height"] . '"';
+            }
+            if (array_key_exists("x-height", $a)) {
+                $attributes .= ' x-height="' . $a["x-height"] . '"';
+            }
+            if (array_key_exists("accent-height", $a)) {
+                $attributes .= ' accent-height="' . $a["accent-height"] . '"';
+            }
+            if (array_key_exists("ascent", $a)) {
+                $attributes .= ' ascent="' . $a["ascent"] . '"';
+            }
+            if (array_key_exists("descent", $a)) {
+                $attributes .= ' descent="' . $a["descent"] . '"';
+            }
+            if (array_key_exists("widths", $a)) {
+                $attributes .= ' widths="' . $a["widths"] . '"';
+            }
+            if (array_key_exists("bbox", $a)) {
+                $attributes .= ' bbox="' . $a["bbox"] . '"';
+            }
+            if (array_key_exists("ideographic", $a)) {
+                $attributes .= ' ideographic="' . $a["ideographic"] . '"';
+            }
+            if (array_key_exists("alphabetic", $a)) {
+                $attributes .= ' alphabetic="' . $a["alphabetic"] . '"';
+            }
+            if (array_key_exists("mathematical", $a)) {
+                $attributes .= ' mathematical="' . $a["mathematical"] . '"';
+            }
+            if (array_key_exists("hanging", $a)) {
+                $attributes .= ' hanging="' . $a["hanging"] . '"';
+            }
+            if (array_key_exists("v-ideographic", $a)) {
+                $attributes .= ' v-ideographic="' . $a["v-ideographic"] . '"';
+            }
+            if (array_key_exists("v-alphabetic", $a)) {
+                $attributes .= ' v-alphabetic="' . $a["v-alphabetic"] . '"';
+            }
+            if (array_key_exists("v-mathematical", $a)) {
+                $attributes .= ' v-mathematical="' . $a["v-mathematical"] . '"';
+            }
+            if (array_key_exists("v-hanging", $a)) {
+                $attributes .= ' v-hanging="' . $a["v-hanging"] . '"';
+            }
+            if (array_key_exists("underline-position", $a)) {
+                $attributes .= ' underline-position="' . $a["underline-position"] . '"';
+            }
+            if (array_key_exists("underline-thickness", $a)) {
+                $attributes .= ' underline-thickness="' . $a["underline-thickness"] . '"';
+            }
+            if (array_key_exists("strikethrough-position", $a)) {
+                $attributes .= ' strikethrough-position="' . $a["strikethrough-position"] . '"';
+            }
+            if (array_key_exists("strikethrough-thickness", $a)) {
+                $attributes .= ' strikethrough-thickness="' . $a["strikethrough-thickness"] . '"';
+            }
+            if (array_key_exists("overline-position", $a)) {
+                $attributes .= ' overline-position="' . $a["overline-position"] . '"';
+            }
+            if (array_key_exists("overline-thickness", $a)) {
+                $attributes .= ' overline-thickness="' . $a["overline-thickness"] . '"';
+            }
+        }
+        
+        return $attributes;
+    }
+    
+    public function fonteface($sources, $id = '', $a = '')
+    {
+        if (!empty($id)) {
+            $id = ' id="' . $id . '"';
+        }
+        $attributes = $this->obterAtributosFonteFace($a);
+        
+        $src = '';
+        foreach ($sources as $source) {
+            $element = '';
+            if (array_key_exists("xlink:href", $source)) {
+                $element .= '<font-face-uri xlink:href="' . $source["xlink:href"] . '" />';
+            }
+            if (array_key_exists("name", $source)) {
+                $element .= '<font-face-name name="' . $source["name"] . '" />';
+            }
+            $src .= '<font-face-src id="' . $source["id"] . '">' . $element . '</font-face-src>' . PHP_EOL;
+        }
+        
+        return '<font-face' . $id . $attributes . '>' . PHP_EOL . $src . '</font-face>' . PHP_EOL;
+    }
+    
+    // unicode = "<string>"
+    // glyph-name = "<name> [, <name> ]* "
+    // d = "path data"
+    // orientation = "h | v"
+    // arabic-form = "initial | medial | terminal | isolated"
+    // lang = "%LanguageCodes;"
+    // horiz-adv-x = "<number>"
+    // vert-origin-x = "<number>"
+    // vert-origin-y = "<number>"
+    // vert-adv-y = "<number>"
+    public function glifo($content, $id = '', $unicode = '', $glyphname = '', $d = '', $orientation = '', $arabicform = '', $lang = '', $horizadvx = '', $vertoriginx = '', $vertoriginy = '', $vertadvy = '', $presentation = '', $class = '', $style = '')
+    {
+        if (!empty($id)) {
+            $id = ' id="' . $id . '"';
+        }
+        if (!empty($unicode)) {
+            $unicode = ' unicode="' . $unicode . '"';
+        }
+        if (!empty($glyphname)) {
+            $glyphname = ' glyph-name="' . $glyphname . '"';
+        }
+        if (!empty($d)) {
+            $d = ' d="' . $d . '"';
+        }
+        if (!empty($orientation)) {
+            $orientation = ' orientation="' . $orientation . '"';
+        }
+        if (!empty($arabicform)) {
+            $arabicform = ' arabic-form="' . $arabicform . '"';
+        }
+        if (!empty($lang)) {
+            $lang = ' lang="' . $lang . '"';
+        }
+        if (!empty($horizadvx)) {
+            $horizadvx = ' horiz-adv-x="' . $horizadvx . '"';
+        }
+        if (!empty($vertoriginx)) {
+            $vertoriginx = ' vert-origin-x="' . $vertoriginx . '"';
+        }
+        if (!empty($vertoriginy)) {
+            $vertoriginy = ' vert-origin-y="' . $vertoriginy . '"';
+        }
+        if (!empty($vertadvy)) {
+            $vertadvy = ' vert-adv-y="' . $vertadvy . '"';
+        }
+        if (!empty($class)) {
+            $class = ' class="' . $class . '"';
+        }
+        if (!empty($style)) {
+            $style = ' style="' . $style . '"';
+        }
+        $attributes = $this->obterAtributosApresentacao($presentation);
+        
+        return '<glyph' . $id . $unicode . $glyphname . $d . $orientation . $arabicform . $lang . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</glyph>' . PHP_EOL;
+    }
+    
     // x = "<coordinate>"
     // y = "<coordinate>"
     // width = "<length>"
@@ -420,10 +679,10 @@ class GraficoVetorialEscalavel
     // ry = "<length>"
     public function retangulo($x = '', $y = '', $width = '', $height = '', $rx = '', $ry = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($x)) {
+        if (!empty($x) or is_numeric($x)) {
             $x = ' x="' . $x . '"';
         }
-        if (!empty($y)) {
+        if (!empty($y) or is_numeric($y)) {
             $y = ' y="' . $y . '"';
         }
         if (!empty($width)) {
@@ -432,10 +691,10 @@ class GraficoVetorialEscalavel
         if (!empty($height)) {
             $height = ' height="' . $height . '"';
         }
-        if (!empty($rx)) {
+        if (!empty($rx) or is_numeric($rx)) {
             $rx = ' rx="' . $rx . '"';
         }
-        if (!empty($ry)) {
+        if (!empty($ry) or is_numeric($ry)) {
             $ry = ' ry="' . $ry . '"';
         }
         if (!empty($class)) {
@@ -457,13 +716,13 @@ class GraficoVetorialEscalavel
     // r = "<length>"
     public function circulo($cx = '', $cy = '', $r = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($cx)) {
+        if (!empty($cx) or is_numeric($cx)) {
             $cx = ' cx="' . $cx . '"';
         }
-        if (!empty($cy)) {
+        if (!empty($cy) or is_numeric($cy)) {
             $cy = ' cy="' . $cy . '"';
         }
-        if (!empty($r)) {
+        if (!empty($r) or is_numeric($r)) {
             $r = ' r="' . $r . '"';
         }
         if (!empty($class)) {
@@ -486,16 +745,16 @@ class GraficoVetorialEscalavel
     // ry = "<length>"
     public function elipse($cx = '', $cy = '', $rx = '', $ry = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($cx)) {
+        if (!empty($cx) or is_numeric($cx)) {
             $cx = ' cx="' . $cx . '"';
         }
-        if (!empty($cy)) {
+        if (!empty($cy) or is_numeric($cy)) {
             $cy = ' cy="' . $cy . '"';
         }
-        if (!empty($rx)) {
+        if (!empty($rx) or is_numeric($rx)) {
             $rx = ' rx="' . $rx . '"';
         }
-        if (!empty($ry)) {
+        if (!empty($ry) or is_numeric($ry)) {
             $ry = ' ry="' . $ry . '"';
         }
         if (!empty($class)) {
@@ -518,16 +777,16 @@ class GraficoVetorialEscalavel
     // y2 = "<coordinate>"
     public function linha($x1 = '', $y1 = '', $x2 = '', $y2 = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($x1)) {
+        if (!empty($x1) or is_numeric($x1)) {
             $x1 = ' x1="' . $x1 . '"';
         }
-        if (!empty($y1)) {
+        if (!empty($y1) or is_numeric($y1)) {
             $y1 = ' y1="' . $y1 . '"';
         }
-        if (!empty($x2)) {
+        if (!empty($x2) or is_numeric($x2)) {
             $x2 = ' x2="' . $x2 . '"';
         }
-        if (!empty($y2)) {
+        if (!empty($y2) or is_numeric($y2)) {
             $y2 = ' y2="' . $y2 . '"';
         }
         if (!empty($class)) {
@@ -589,10 +848,10 @@ class GraficoVetorialEscalavel
     //                      meet | slice
     public function imagem($xlinkhref, $x = '', $y = '', $width = '', $height = '', $preserveaspectratio = '', $presentation = '', $class = '', $style = '', $transform = '')
     {
-        if (!empty($x)) {
+        if (!empty($x) or is_numeric($x)) {
             $x = ' x="' . $x . '"';
         }
-        if (!empty($y)) {
+        if (!empty($y) or is_numeric($y)) {
             $y = ' y="' . $y . '"';
         }
         if (!empty($width)) {
@@ -632,16 +891,16 @@ class GraficoVetorialEscalavel
         if (!empty($id)) {
             $id = ' id="' . $id . '"';
         }
-        if (!empty($x1)) {
+        if (!empty($x1) or is_numeric($x1)) {
             $x1 = ' x1="' . $x1 . '"';
         }
-        if (!empty($y1)) {
+        if (!empty($y1) or is_numeric($y1)) {
             $y1 = ' y1="' . $y1 . '"';
         }
-        if (!empty($x2)) {
+        if (!empty($x2) or is_numeric($x2)) {
             $x2 = ' x2="' . $x2 . '"';
         }
-        if (!empty($y2)) {
+        if (!empty($y2) or is_numeric($y2)) {
             $y2 = ' y2="' . $y2 . '"';
         }
         if (!empty($gradientunits)) {
@@ -687,19 +946,19 @@ class GraficoVetorialEscalavel
         if (!empty($id)) {
             $id = ' id="' . $id . '"';
         }
-        if (!empty($cx)) {
+        if (!empty($cx) or is_numeric($cx)) {
             $cx = ' cx="' . $cx . '"';
         }
-        if (!empty($cy)) {
+        if (!empty($cy) or is_numeric($cy)) {
             $cy = ' cy="' . $cy . '"';
         }
-        if (!empty($r)) {
+        if (!empty($r) or is_numeric($r)) {
             $r = ' r="' . $r . '"';
         }
-        if (!empty($fx)) {
+        if (!empty($fx) or is_numeric($fx)) {
             $fx = ' fx="' . $fx . '"';
         }
-        if (!empty($fy)) {
+        if (!empty($fy) or is_numeric($fy)) {
             $fy = ' fy="' . $fy . '"';
         }
         if (!empty($gradientunits)) {
