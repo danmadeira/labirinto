@@ -7,7 +7,39 @@
 class GraficoVetorialEscalavel
 {
     
-    public function xml10($standalone = 'no', $encoding = 'UTF-8')
+    private $grafico;
+    private $svgaberto;
+    
+    public function obter()
+    {
+        $this->fechar();
+        return $this->grafico;
+    }
+    
+    public function iniciar($width = 1366, $height = 768, $viewbox = '', $preserveaspectratio = '', $doctype = false, $xml = false, $standalone = 'no', $encoding = 'UTF-8')
+    {
+        $d = '';
+        $x = '';
+        
+        if ($doctype) {
+            $d = $this->dtd();
+        }
+        if ($xml) {
+            $x = $this->xml10($standalone, $encoding);
+        }
+        
+        $this->svgaberto = $d . $x . $this->svg11($width, $height, $viewbox, $preserveaspectratio);
+    }
+    
+    private function fechar()
+    {
+        if(empty($this->svgaberto)) {
+            $this->iniciar();
+        }
+        $this->grafico = $this->svgaberto . $this->svgFim();
+    }
+    
+    private function xml10($standalone = 'no', $encoding = 'UTF-8')
     {
         if (!empty($standalone)) {
             $standalone = ' standalone="' . $standalone . '"';
@@ -19,7 +51,7 @@ class GraficoVetorialEscalavel
         return '<?xml version="1.0"' . $encoding . $standalone . '?>' . PHP_EOL;
     }
     
-    public function dtd()
+    private function dtd()
     {
         return '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' . PHP_EOL;
     }
@@ -38,7 +70,7 @@ class GraficoVetorialEscalavel
     // contentScriptType = "content-type"
     // contentStyleType = "content-type" 
     // zoomAndPan = "disable | magnify"
-    public function svg11($content, $width = 1366, $height = 768, $viewbox = '', $preserveaspectratio = '')
+    private function svg11($width = 1366, $height = 768, $viewbox = '', $preserveaspectratio = '')
     {
         if (!empty($viewbox)) {
             $viewbox = ' viewBox="' . $viewbox . '"';
@@ -47,17 +79,22 @@ class GraficoVetorialEscalavel
             $preserveaspectratio = ' preserveAspectRatio="' . $preserveaspectratio . '"';
         }
         
-        return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '"' . $viewbox . $preserveaspectratio . '>' . PHP_EOL . $content . PHP_EOL . '</svg>';
+        return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '"' . $viewbox . $preserveaspectratio . '>' . PHP_EOL;
+    }
+    
+    private function svgFim()
+    {
+        return '</svg>';
     }
     
     public function titulo($content)
     {
-        return '<title>' . $content . '</title>' . PHP_EOL;
+        $this->svgaberto .= '<title>' . $content . '</title>' . PHP_EOL;
     }
     
     public function descricao($content)
     {
-        return '<desc>' . $content . '</desc>' . PHP_EOL;
+        $this->svgaberto .= '<desc>' . $content . '</desc>' . PHP_EOL;
     }
     
     public function definicao($content, $presentation = '', $class = '', $style = '', $transform = '')
@@ -73,7 +110,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<defs' . $attributes . $class . $style . $transform . '>' . $content . '</defs>';
+        $this->svgaberto .= '<defs' . $attributes . $class . $style . $transform . '>' . $content . '</defs>';
     }
     
     public function grupo($content, $id = '', $presentation = '', $class = '', $style = '', $transform = '')
@@ -92,7 +129,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<g' . $id . $attributes . $class . $style . $transform . '>' . PHP_EOL . $content . PHP_EOL . '</g>' . PHP_EOL;
+        $this->svgaberto .= '<g' . $id . $attributes . $class . $style . $transform . '>' . PHP_EOL . $content . PHP_EOL . '</g>' . PHP_EOL;
     }
     
     // viewBox = "<min-x> <min-y> <width> <height>"
@@ -119,7 +156,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<symbol' . $id . $attributes . $class . $style . $preserveaspectratio . $viewbox . '>' . PHP_EOL . $content . PHP_EOL . '</symbol>' . PHP_EOL;
+        $this->svgaberto .= '<symbol' . $id . $attributes . $class . $style . $preserveaspectratio . $viewbox . '>' . PHP_EOL . $content . PHP_EOL . '</symbol>' . PHP_EOL;
     }
     
     // x = "<coordinate>"
@@ -152,7 +189,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<use xlink:href="' . $xlinkhref . '"' . $x . $y . $width . $height . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<use xlink:href="' . $xlinkhref . '"' . $x . $y . $width . $height . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // d = "path data"
@@ -176,7 +213,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<path' . $id . ' d="' . $d . '"' . $pathlength . $attributes . $class . $style . $transform . ' />';
+        $this->svgaberto .= '<path' . $id . ' d="' . $d . '"' . $pathlength . $attributes . $class . $style . $transform . ' />';
     }
     
     // <color> = white = rgb(255,255,255) = rgb(100%,100%,100%) = #fff = #ffffff
@@ -339,7 +376,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<text x="' . $x . '" y="' . $y . '"' . $dx . $dy . $rotate . $textlength . $lengthadjust . $attributes . $class . $style . $transform . '>' . $content . '</text>' . PHP_EOL;
+        $this->svgaberto .= '<text x="' . $x . '" y="' . $y . '"' . $dx . $dy . $rotate . $textlength . $lengthadjust . $attributes . $class . $style . $transform . '>' . $content . '</text>' . PHP_EOL;
     }
     
     // x = "<list-of-coordinates>"
@@ -380,7 +417,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<tspan' . $x . $y . $dx . $dy . $rotate . $textlength . $lengthadjust . $attributes . $class . $style . '>' . $content . '</tspan>';
+        $this->svgaberto .= '<tspan' . $x . $y . $dx . $dy . $rotate . $textlength . $lengthadjust . $attributes . $class . $style . '>' . $content . '</tspan>';
     }
     
     // xlink:href = "<iri>"
@@ -409,7 +446,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<textPath' . $xlinkhref . $startoffset . $method . $spacing . $attributes . $class . $style . '>' . $content . '</textPath>' . PHP_EOL;
+        $this->svgaberto .= '<textPath' . $xlinkhref . $startoffset . $method . $spacing . $attributes . $class . $style . '>' . $content . '</textPath>' . PHP_EOL;
     }
     
     // horiz-origin-x = "<number>"
@@ -449,7 +486,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<font' . $id . $horizoriginx . $horizoriginy . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</font>' . PHP_EOL;
+        $this->svgaberto .= '<font' . $id . $horizoriginx . $horizoriginy . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</font>' . PHP_EOL;
     }
     
     // font-family = "<string>"
@@ -612,7 +649,7 @@ class GraficoVetorialEscalavel
             $src .= '<font-face-src id="' . $source["id"] . '">' . $element . '</font-face-src>' . PHP_EOL;
         }
         
-        return '<font-face' . $id . $attributes . '>' . PHP_EOL . $src . '</font-face>' . PHP_EOL;
+        $this->svgaberto .= '<font-face' . $id . $attributes . '>' . PHP_EOL . $src . '</font-face>' . PHP_EOL;
     }
     
     // unicode = "<string>"
@@ -668,7 +705,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<glyph' . $id . $unicode . $glyphname . $d . $orientation . $arabicform . $lang . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</glyph>' . PHP_EOL;
+        $this->svgaberto .= '<glyph' . $id . $unicode . $glyphname . $d . $orientation . $arabicform . $lang . $horizadvx . $vertoriginx . $vertoriginy . $vertadvy . $attributes . $class . $style . '>' . PHP_EOL . $content . PHP_EOL . '</glyph>' . PHP_EOL;
     }
     
     // x = "<coordinate>"
@@ -708,7 +745,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<rect' . $x . $y . $width . $height . $rx . $ry . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<rect' . $x . $y . $width . $height . $rx . $ry . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // cx = "<coordinate>"
@@ -736,7 +773,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<circle' . $cx . $cy . $r . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<circle' . $cx . $cy . $r . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // cx = "<coordinate>"
@@ -768,7 +805,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<ellipse' . $cx . $cy . $rx . $ry . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<ellipse' . $cx . $cy . $rx . $ry . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // x1 = "<coordinate>"
@@ -800,7 +837,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<line' . $x1 . $y1 . $x2 . $y2 . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<line' . $x1 . $y1 . $x2 . $y2 . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // points = "<list-of-points>"
@@ -817,7 +854,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<polyline points="' . $points . '"' . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<polyline points="' . $points . '"' . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // points = "<list-of-points>"
@@ -834,7 +871,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<polygon points="' . $points . '"' . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
+        $this->svgaberto .= '<polygon points="' . $points . '"' . $attributes . $class . $style . $transform . ' />' . PHP_EOL;
     }
     
     // x = "<coordinate>"
@@ -874,7 +911,7 @@ class GraficoVetorialEscalavel
         }
         $attributes = $this->obterAtributosApresentacao($presentation);
         
-        return '<image' . $x . $y . $width . $height . '" xlink:href="' . $xlinkhref . '"' . $preserveaspectratio . $attributes . $class . $style . $transform . '></image>' . PHP_EOL;
+        $this->svgaberto .= '<image' . $x . $y . $width . $height . '" xlink:href="' . $xlinkhref . '"' . $preserveaspectratio . $attributes . $class . $style . $transform . '></image>' . PHP_EOL;
     }
     
     // $stops = array(array("offset" => '50%', "stop-color" => 'red', "stop-opacity" => '1'));
@@ -928,7 +965,7 @@ class GraficoVetorialEscalavel
             $paradas .= '<stop offset="' . $stop["offset"] . '" stop-color="' . $stop["stop-color"] . '" stop-opacity="' . $stop["stop-opacity"] . '" />';
         }
         
-        return '<linearGradient' . $id . $x1 . $y1 . $x2 . $y2 . $gradientunits . $gradienttransform . $spreadmethod . $xlinkhref . $attributes . $class . $style . '>' . $paradas . '</linearGradient>' . PHP_EOL;
+        $this->svgaberto .= '<linearGradient' . $id . $x1 . $y1 . $x2 . $y2 . $gradientunits . $gradienttransform . $spreadmethod . $xlinkhref . $attributes . $class . $style . '>' . $paradas . '</linearGradient>' . PHP_EOL;
     }
     
     // $stops = array(array("offset" => '50%', "stop-color" => 'red', "stop-opacity" => '1'));
@@ -986,7 +1023,7 @@ class GraficoVetorialEscalavel
             $paradas .= '<stop offset="' . $stop["offset"] . '" stop-color="' . $stop["stop-color"] . '" stop-opacity="' . $stop["stop-opacity"] . '" />';
         }
         
-        return '<radialGradient' . $id . $cx . $cy . $r . $fx . $fy . $gradientunits . $gradienttransform . $spreadmethod . $xlinkhref . $attributes . $class . $style . '>' . $paradas . '</radialGradient>' . PHP_EOL;
+        $this->svgaberto .= '<radialGradient' . $id . $cx . $cy . $r . $fx . $fy . $gradientunits . $gradienttransform . $spreadmethod . $xlinkhref . $attributes . $class . $style . '>' . $paradas . '</radialGradient>' . PHP_EOL;
     }
     
 }

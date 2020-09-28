@@ -39,7 +39,7 @@ class SistemaLabirinto
     }
     
     /**
-     * Invoca a IA e a construção das paredes etc.
+     * Invoca a IA e a construção das paredes.
      *
      * @param array posicao [0 => int, 1 => int]
      *        string direcao
@@ -50,16 +50,9 @@ class SistemaLabirinto
     {
         $locfundo = $this->ia->localizarFundo($posicao, $direcao);
         $fundocurva = $this->ia->verificarFundoCurva($locfundo["posicao"], $direcao);
+        $construcao = $this->paredes->construir($direcao, $locfundo, $fundocurva);
         
-        $teto = $this->paredes->teto();
-        $chao = $this->paredes->chao();
-        $fundo = $this->paredes->fundo($locfundo["posicao"], $locfundo["distancia"], $fundocurva);
-        $direita = $this->paredes->direita($locfundo["posicao"], $locfundo["distancia"], $direcao);
-        $esquerda = $this->paredes->esquerda($locfundo["posicao"], $locfundo["distancia"], $direcao);
-        $borda = $this->paredes->quadro();
-        $construcao = $teto . $chao . $fundo . $direita . $esquerda . $borda;
-        
-        return $this->paredes->imagem($construcao);
+        return $construcao;
     }
     
     /**

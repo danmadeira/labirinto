@@ -16,50 +16,56 @@ class ParedesLabirinto
     }
     
     /**
-     * Gera o XML SVG completo.
-     *
-     * @param string SVG
-     *
+     * Constrói cada parte do cenário.
+     * 
+     * @param string direcao
+     * @param array ['posicao' => array [0 => int, 1 => int], 'distancia' => int]
+     * @param bool fundocurva
+     * 
      * @return string SVG
      */
-    public function imagem($conteudo)
+    public function construir($direcao, $locfundo, $fundocurva)
     {
-        return $this->svg->dtd() . $this->svg->svg11($conteudo, LARGURA_SVG, ALTURA_SVG);
+        $this->svg->iniciar(LARGURA_SVG, ALTURA_SVG, '', '', true);
+        
+        $this->teto();
+        $this->chao();
+        $this->fundo($locfundo["posicao"], $locfundo["distancia"], $fundocurva);
+        $this->direita($locfundo["posicao"], $locfundo["distancia"], $direcao);
+        $this->esquerda($locfundo["posicao"], $locfundo["distancia"], $direcao);
+        $this->quadro();
+        
+        return $this->svg->obter();
+        
     }
     
     /**
      * Gera a moldura da imagem SVG.
-     *
-     * @return string SVG
      */
-    public function quadro()
+    private function quadro()
     {
-        return $this->svg->retangulo(1, 1, (LARGURA_SVG-2), (ALTURA_SVG-2), '', '', array("fill" => CORES["quadro"]["P"], "stroke" => CORES["quadro"]["B"], "stroke-width" => 2));
+        $this->svg->retangulo(1, 1, (LARGURA_SVG-2), (ALTURA_SVG-2), '', '', array("fill" => CORES["quadro"]["P"], "stroke" => CORES["quadro"]["B"], "stroke-width" => 2));
     }
     
     /**
      * Gera o teto do corredor em SVG.
-     *
-     * @return string SVG
      */
-    public function teto()
+    private function teto()
     {
         $h = ALTURA_SVG / 2 + 1;
         
-        return $this->svg->retangulo(1, 1, LARGURA_SVG, $h, '', '', array("fill" => CORES["teto"]["P"], "stroke" => CORES["teto"]["B"], "stroke-width" => 1));
+        $this->svg->retangulo(1, 1, LARGURA_SVG, $h, '', '', array("fill" => CORES["teto"]["P"], "stroke" => CORES["teto"]["B"], "stroke-width" => 1));
     }
     
     /**
      * Gera o chão do corredor em SVG.
-     *
-     * @return string SVG
      */
-    public function chao()
+    private function chao()
     {
         $y = ALTURA_SVG / 2 + 1;
         $h = ALTURA_SVG / 2 + 1;
         
-        return $this->svg->retangulo(1, $y, LARGURA_SVG, $h, '', '', array("fill" => CORES["chao"]["P"], "stroke" => CORES["chao"]["B"], "stroke-width" => 1));
+        $this->svg->retangulo(1, $y, LARGURA_SVG, $h, '', '', array("fill" => CORES["chao"]["P"], "stroke" => CORES["chao"]["B"], "stroke-width" => 1));
     }
     
     /**
@@ -68,16 +74,14 @@ class ParedesLabirinto
      * @param array posicao [0 => int, 1 => int]
      *        int distancia
      *        bool fundocurva
-     *
-     * @return string SVG
      */
-    public function fundo($posicao, $distancia, $fundocurva)
+    private function fundo($posicao, $distancia, $fundocurva)
     {
         $l = $posicao[0];
         $c = $posicao[1];
         $valor = LABIRINTO[$l][$c];
         
-        return $this->quadradoFundo($distancia, $fundocurva, $valor);
+        $this->quadradoFundo($distancia, $fundocurva, $valor);
     }
     
     /**
@@ -86,49 +90,44 @@ class ParedesLabirinto
      * @param array fundo [0 => int, 1 => int]
      *        int distancia
      *        string direcao
-     *
-     * @return string SVG
      */
-    public function direita($fundo, $distancia, $direcao)
+    private function direita($fundo, $distancia, $direcao)
     {
         $l = $fundo[0];
         $c = $fundo[1];
-        $parede = '';
         
         for ($i = 1; $i <= $distancia; $i++) {
             switch ($direcao) {
                 case 'N':
                     if (LABIRINTO[$l+$i][$c+1] == PAREDE) {
-                        $parede .= $this->trapezioDireito($i, $distancia);
+                        $this->trapezioDireito($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloDireito($i, $distancia);
+                        $this->retanguloDireito($i, $distancia);
                     }
                     break;
                 case 'S':
                     if (LABIRINTO[$l-$i][$c-1] == PAREDE) {
-                        $parede .= $this->trapezioDireito($i, $distancia);
+                        $this->trapezioDireito($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloDireito($i, $distancia);
+                        $this->retanguloDireito($i, $distancia);
                     }
                     break;
                 case 'E':
                     if (LABIRINTO[$l+1][$c-$i] == PAREDE) {
-                        $parede .= $this->trapezioDireito($i, $distancia);
+                        $this->trapezioDireito($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloDireito($i, $distancia);
+                        $this->retanguloDireito($i, $distancia);
                     }
                     break;
                 case 'W':
                     if (LABIRINTO[$l-1][$c+$i] == PAREDE) {
-                        $parede .= $this->trapezioDireito($i, $distancia);
+                        $this->trapezioDireito($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloDireito($i, $distancia);
+                        $this->retanguloDireito($i, $distancia);
                     }
                     break;
             }
         }
-        
-        return $parede;
     }
 
     /**
@@ -137,49 +136,44 @@ class ParedesLabirinto
      * @param array fundo [0 => int, 1 => int]
      *        int distancia
      *        string direcao
-     *
-     * @return string SVG
      */
-    public function esquerda($fundo, $distancia, $direcao)
+    private function esquerda($fundo, $distancia, $direcao)
     {
         $l = $fundo[0];
         $c = $fundo[1];
-        $parede = '';
         
         for ($i = 1; $i <= $distancia; $i++) {
             switch ($direcao) {
                 case 'N':
                     if (LABIRINTO[$l+$i][$c-1] == PAREDE) {
-                        $parede .= $this->trapezioEsquerdo($i, $distancia);
+                        $this->trapezioEsquerdo($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloEsquerdo($i, $distancia);
+                        $this->retanguloEsquerdo($i, $distancia);
                     }
                     break;
                 case 'S':
                     if (LABIRINTO[$l-$i][$c+1] == PAREDE) {
-                        $parede .= $this->trapezioEsquerdo($i, $distancia);
+                        $this->trapezioEsquerdo($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloEsquerdo($i, $distancia);
+                        $this->retanguloEsquerdo($i, $distancia);
                     }
                     break;
                 case 'E':
                     if (LABIRINTO[$l-1][$c-$i] == PAREDE) {
-                        $parede .= $this->trapezioEsquerdo($i, $distancia);
+                        $this->trapezioEsquerdo($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloEsquerdo($i, $distancia);
+                        $this->retanguloEsquerdo($i, $distancia);
                     }
                     break;
                 case 'W':
                     if (LABIRINTO[$l+1][$c+$i] == PAREDE) {
-                        $parede .= $this->trapezioEsquerdo($i, $distancia);
+                        $this->trapezioEsquerdo($i, $distancia);
                     } else {
-                        $parede .= $this->retanguloEsquerdo($i, $distancia);
+                        $this->retanguloEsquerdo($i, $distancia);
                     }
                     break;
             }
         }
-        
-        return $parede;
     }
     
     /**
@@ -188,8 +182,6 @@ class ParedesLabirinto
      * @param int distancia
      *        bool fundocurva
      *        int valor
-     *
-     * @return string SVG
      */
     private function quadradoFundo($distancia, $fundocurva, $valor)
     {
@@ -217,7 +209,7 @@ class ParedesLabirinto
                   $quadrado["c"]["x"] . ',' . $quadrado["c"]["y"] . ' ' .
                   $quadrado["d"]["x"] . ',' . $quadrado["d"]["y"];
         
-        return $this->svg->poligono($pontos, array("fill" => $preenchimento, "stroke" => $borda, "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
+        $this->svg->poligono($pontos, array("fill" => $preenchimento, "stroke" => $borda, "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -225,13 +217,11 @@ class ParedesLabirinto
      *
      * @param int i
      *        int distancia
-     *
-     * @return string SVG
      */
     private function trapezioDireito($i, $distancia)
     {
         if ($i == $distancia) {
-            $ef = PHP_EOL . LARGURA_SVG . ',1 ' . LARGURA_SVG . ',' . ALTURA_SVG;
+            $ef = ' ' . LARGURA_SVG . ',1 ' . LARGURA_SVG . ',' . ALTURA_SVG;
         } else {
             $ef = '';
         }
@@ -243,7 +233,7 @@ class ParedesLabirinto
                   $trapezio["c"]["x"] . ',' . $trapezio["c"]["y"] . ' ' .
                   $trapezio["d"]["x"] . ',' . $trapezio["d"]["y"];
         
-        return $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
+        $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -251,8 +241,6 @@ class ParedesLabirinto
      *
      * @param int i
      *        int distancia
-     *
-     * @return string SVG
      */
     private function retanguloDireito($i, $distancia)
     {
@@ -263,7 +251,7 @@ class ParedesLabirinto
                   $retangulo["c"]["x"] . ',' . $retangulo["c"]["y"] . ' ' .
                   $retangulo["d"]["x"] . ',' . $retangulo["d"]["y"];
         
-        return $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
+        $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
 
     /**
@@ -271,13 +259,11 @@ class ParedesLabirinto
      *
      * @param int i
      *        int distancia
-     *
-     * @return string SVG
      */
     private function trapezioEsquerdo($i, $distancia)
     {
         if ($i == $distancia) {
-            $ef = PHP_EOL . ' 0,' . ALTURA_SVG . ' 0,0';
+            $ef = ' 0,' . ALTURA_SVG . ' 0,0';
         } else {
             $ef = '';
         }
@@ -289,7 +275,7 @@ class ParedesLabirinto
                   $trapezio["c"]["x"] . ',' . $trapezio["c"]["y"] . ' ' .
                   $trapezio["d"]["x"] . ',' . $trapezio["d"]["y"] . $ef;
         
-        return $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
+        $this->svg->poligono($pontos, array("fill" => CORES["parede"]["P"], "stroke" => CORES["parede"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
     
     /**
@@ -297,8 +283,6 @@ class ParedesLabirinto
      *
      * @param int i
      *        int distancia
-     *
-     * @return string SVG
      */
     private function retanguloEsquerdo($i, $distancia)
     {
@@ -309,7 +293,7 @@ class ParedesLabirinto
                   $retangulo["c"]["x"] . ',' . $retangulo["c"]["y"] . ' ' .
                   $retangulo["d"]["x"] . ',' . $retangulo["d"]["y"];
         
-        return $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
+        $this->svg->poligono($pontos, array("fill" => CORES["curva"]["P"], "stroke" => CORES["curva"]["B"], "stroke-width" => 2, "stroke-linejoin" => 'bevel'));
     }
 
 }
