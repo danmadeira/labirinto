@@ -12,11 +12,11 @@ class GraficoVetorialEscalavel
     
     public function obter()
     {
-        $this->fechar();
+        $this->encerrar();
         return $this->grafico;
     }
     
-    public function iniciar($width = 1366, $height = 768, $viewbox = '', $preserveaspectratio = '', $doctype = false, $xml = false, $standalone = 'no', $encoding = 'UTF-8')
+    public function iniciar($width = 1366, $height = 768, $namespace = true, $version = '1.1', $lang = '', $xlink = false, $id = '', $viewbox = '', $preserveaspectratio = '', $doctype = false, $xml = false, $standalone = 'no', $encoding = 'UTF-8')
     {
         $d = '';
         $x = '';
@@ -28,10 +28,10 @@ class GraficoVetorialEscalavel
             $x = $this->xml10($standalone, $encoding);
         }
         
-        $this->svgaberto = $d . $x . $this->svg11($width, $height, $viewbox, $preserveaspectratio);
+        $this->svgaberto = $d . $x . $this->svg11($width, $height, $namespace, $version, $lang, $xlink, $id, $viewbox, $preserveaspectratio);
     }
     
-    private function fechar()
+    private function encerrar()
     {
         if(empty($this->svgaberto)) {
             $this->iniciar();
@@ -70,8 +70,31 @@ class GraficoVetorialEscalavel
     // contentScriptType = "content-type"
     // contentStyleType = "content-type" 
     // zoomAndPan = "disable | magnify"
-    private function svg11($width = 1366, $height = 768, $viewbox = '', $preserveaspectratio = '')
+    private function svg11($width = 1366, $height = 768, $namespace = true, $version = '1.1', $lang = '', $xlink = false, $id = '', $viewbox = '', $preserveaspectratio = '')
     {
+        if ($namespace) {
+            $ns = ' xmlns="http://www.w3.org/2000/svg"';
+        } else {
+            $ns = '';
+        }
+        if (!empty($version)) {
+            $ver = ' version="' . $version . '"';
+        } else {
+            $ver = '';
+        }
+        if (!empty($lang)) {
+            $lang = ' xml:lang="' . $lang . '"';
+        } else {
+            $lang = '';
+        }
+        if ($xlink) {
+            $link = ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+        } else {
+            $link = '';
+        }
+        if (!empty($id)) {
+            $id = ' id="' . $id . '"';
+        }
         if (!empty($viewbox)) {
             $viewbox = ' viewBox="' . $viewbox . '"';
         }
@@ -79,7 +102,7 @@ class GraficoVetorialEscalavel
             $preserveaspectratio = ' preserveAspectRatio="' . $preserveaspectratio . '"';
         }
         
-        return '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '"' . $viewbox . $preserveaspectratio . '>' . PHP_EOL;
+        return '<svg' . $ns . $ver . $lang . $link . $id . ' width="' . $width . '" height="' . $height . '"' . $viewbox . $preserveaspectratio . '>' . PHP_EOL;
     }
     
     private function svgFim()
@@ -111,6 +134,40 @@ class GraficoVetorialEscalavel
         $attributes = $this->obterAtributosApresentacao($presentation);
         
         $this->svgaberto .= '<defs' . $attributes . $class . $style . $transform . '>' . $content . '</defs>';
+    }
+    
+    public function ligacao($namespace = true, $href = '', $rel = '', $media = '', $type = '')
+    {
+        if ($namespace) {
+            $ns = ' xmlns="http://www.w3.org/1999/xhtml"';
+        } else {
+            $ns = '';
+        }
+        if (!empty($href)) {
+            $href = ' href="' . $href . '"';
+        }
+        if (!empty($rel)) {
+            $rel = ' rel="' . $rel . '"';
+        }
+        if (!empty($media)) {
+            $media = ' media="' . $media . '"';
+        }
+        if (!empty($type)) {
+            $type = ' type="' . $type . '"';
+        }
+        $this->svgaberto .= '<link' . $ns . $href . $rel . $media . $type . ' />' . PHP_EOL;
+    }
+    
+    public function script($href = '', $content = '')
+    {
+        if (!empty($href)) {
+            $href = ' xlink:href="' . $href . '" />';
+            $content = '';
+        } elseif (!empty ($content)) {
+            $href = '>';
+            $content = '<![CDATA[' . PHP_EOL . $content . PHP_EOL . ']]></script>';
+        }
+        $this->svgaberto .= '<script' . $href . $content . PHP_EOL;
     }
     
     public function grupo($content, $id = '', $presentation = '', $class = '', $style = '', $transform = '')
