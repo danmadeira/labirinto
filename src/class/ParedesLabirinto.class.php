@@ -26,7 +26,7 @@ class ParedesLabirinto
      */
     public function construir($direcao, $locfundo, $fundocurva)
     {
-        $this->svg->iniciar(LARGURA_SVG, ALTURA_SVG, true, '1.1', '', false, '', '', '', true);
+        $this->svg->iniciar(LARGURA_SVG, ALTURA_SVG, true, '1.1', '', false);
         
         $this->teto();
         $this->chao();
@@ -35,7 +35,7 @@ class ParedesLabirinto
         $this->esquerda($locfundo["posicao"], $locfundo["distancia"], $direcao);
         $this->quadro();
         
-        return $this->svg->obter();
+        return $this->svg->obter('H');
         
     }
     
